@@ -50,7 +50,7 @@ const Home: React.FC = () => {
                         playsInline
                         className="absolute w-full h-full object-cover"
                     >
-                        <source src="/AI_Agent_Showcase_Video_Generated.mp4" type="video/mp4" />
+                        <source src="/Video Project 2.mp4" type="video/mp4" />
                     </video>
                     {/* Dark overlay for text readability */}
                     <div className="absolute inset-0 bg-black/50" />
