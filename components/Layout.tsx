@@ -52,31 +52,82 @@ const Layout: React.FC = () => {
         }
     }, [location]);
 
+    const [activeSection, setActiveSection] = useState<string>('');
+
+    // Scroll Spy Effect
+    React.useEffect(() => {
+        const handleScroll = () => {
+            if (location.pathname !== '/') {
+                setActiveSection('');
+                return;
+            }
+
+            const sections = ['services', 'why-me', 'packages'];
+
+            // Default to empty or top
+            let current = '';
+
+            for (const section of sections) {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    // If the top of the section is within the top half of the screen
+                    if (rect.top <= 300 && rect.bottom >= 100) {
+                        current = section;
+                    }
+                }
+            }
+            setActiveSection(current);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        // Trigger once on mount
+        handleScroll();
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [location.pathname]);
+
     return (
         <div className="relative min-h-screen text-white selection:bg-[#4fb7b3] selection:text-black cursor-auto md:cursor-none overflow-x-hidden">
             <CustomCursor />
             <FluidBackground />
 
             {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-8 py-6 mix-blend-difference w-full">
+            <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-8 py-6 w-full">
+                {/* Visual Backdrop for readability */}
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-md -z-10" />
                 <Link to="/" className="font-heading text-xl md:text-2xl font-bold tracking-tighter text-white cursor-default z-50 decoration-0">ADIL-DEV</Link>
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex gap-10 text-sm font-bold tracking-widest uppercase">
-                    {['Services', 'Why Me', 'Packages'].map((item) => (
-                        <button
-                            key={item}
-                            onClick={() => handleNavClick(item.toLowerCase().replace(' ', '-'))}
-                            className="hover:text-[#a8fbd3] transition-colors text-white cursor-pointer bg-transparent border-none"
-                            data-hover="true"
-                        >
-                            {item}
-                        </button>
-                    ))}
+                <div className="hidden md:flex gap-4 text-sm font-bold tracking-widest uppercase">
+                    {['Services', 'Why Me', 'Packages'].map((item) => {
+                        const id = item.toLowerCase().replace(' ', '-');
+                        const isActive = activeSection === id;
+
+                        return (
+                            <button
+                                key={item}
+                                onClick={() => handleNavClick(id)}
+                                className={`
+                                    relative px-6 py-2 rounded-full transition-all duration-300 cursor-pointer border
+                                    ${isActive
+                                        ? 'bg-[#a8fbd3]/10 border-[#a8fbd3] text-[#a8fbd3] shadow-[0_0_15px_rgba(168,251,211,0.3)]'
+                                        : 'bg-transparent border-transparent text-white hover:text-[#a8fbd3] hover:bg-white/5'}
+                                `}
+                                data-hover="true"
+                            >
+                                {item}
+                            </button>
+                        );
+                    })}
                 </div>
                 <Link
                     to="/hire-me"
-                    className="inline-block border border-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 text-white cursor-pointer bg-transparent decoration-0"
+                    className={`inline-block border px-8 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer bg-transparent decoration-0
+                        ${location.pathname === '/hire-me'
+                            ? 'border-[#a8fbd3] text-[#a8fbd3] shadow-[0_0_15px_rgba(168,251,211,0.3)] bg-[#a8fbd3]/10'
+                            : 'border-white text-white hover:bg-white hover:text-black'}
+                    `}
                     data-hover="true"
                 >
                     Hire Me

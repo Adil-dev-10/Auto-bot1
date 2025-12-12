@@ -47,7 +47,7 @@ const HireMe: React.FC = () => {
                     className="bg-white/5 backdrop-blur-md border border-white/10 p-4 rounded-3xl relative overflow-hidden flex items-center justify-center"
                 >
                     <video
-                        src="/bot.mp4"
+                        src="/Video Project 2.mp4"
                         controls
                         className="w-full h-auto rounded-2xl shadow-2xl"
                         style={{ maxHeight: '600px' }}
